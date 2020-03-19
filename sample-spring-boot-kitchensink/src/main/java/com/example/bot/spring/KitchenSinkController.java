@@ -127,7 +127,7 @@ public class KitchenSinkController {
                 locationMessage.getLongitude()
         ));
     }
-
+    //Update by trungpq
     @EventMapping
     public void handleImageMessageEvent(MessageEvent<ImageMessageContent> event) throws IOException {
         // You need to install ImageMagick
