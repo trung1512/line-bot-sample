@@ -35,6 +35,11 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.Scene;
+import javafx.scene.image.Image;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -83,6 +88,7 @@ import com.linecorp.bot.model.message.imagemap.ImagemapExternalLink;
 import com.linecorp.bot.model.message.imagemap.ImagemapVideo;
 import com.linecorp.bot.model.message.imagemap.MessageImagemapAction;
 import com.linecorp.bot.model.message.imagemap.URIImagemapAction;
+import com.linecorp.bot.model.message.sender.Sender;
 import com.linecorp.bot.model.message.template.ButtonsTemplate;
 import com.linecorp.bot.model.message.template.CarouselColumn;
 import com.linecorp.bot.model.message.template.CarouselTemplate;
@@ -127,7 +133,7 @@ public class KitchenSinkController {
                 locationMessage.getLongitude()
         ));
     }
-    //Update by trungpq
+
     @EventMapping
     public void handleImageMessageEvent(MessageEvent<ImageMessageContent> event) throws IOException {
         // You need to install ImageMagick
@@ -544,6 +550,16 @@ public class KitchenSinkController {
                            singletonList(new TextMessage("This message is send without a push notification")),
                            true);
                 break;
+            case "icon":
+                this.reply(replyToken,
+                           TextMessage.builder()
+                                      .text("Hello, I'm cat! Meow~")
+                                      .sender(Sender.builder()
+                                                    .name("Cat")
+                                                    .iconUrl(createUri("/static/icon/cat.png"))
+                                                    .build())
+                                      .build());
+                break;
             default:
                 log.info("Returns echo message {}: {}", replyToken, text);
                 this.replyText(
@@ -556,6 +572,7 @@ public class KitchenSinkController {
 
     private static URI createUri(String path) {
         return ServletUriComponentsBuilder.fromCurrentContextPath()
+                                          .scheme("https")
                                           .path(path).build()
                                           .toUri();
     }
@@ -590,6 +607,7 @@ public class KitchenSinkController {
     private static DownloadedContent createTempFile(String ext) {
         String fileName = LocalDateTime.now().toString() + '-' + UUID.randomUUID() + '.' + ext;
         Path tempFile = KitchenSinkApplication.downloadedContentDir.resolve(fileName);
+        tempFile.setStyle("-fx-transform: rotate(90deg); -fx-border-radius:5px; -fx-border: 1px solid #ddd;");
         tempFile.toFile().deleteOnExit();
         return new DownloadedContent(
                 tempFile,
