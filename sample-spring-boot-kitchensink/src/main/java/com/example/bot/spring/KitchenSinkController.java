@@ -35,11 +35,6 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.scene.Scene;
-import javafx.scene.image.Image;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -153,6 +148,12 @@ public class KitchenSinkController {
                         system(
                                 "convert",
                                 "-resize", "240x",
+                                "-rotate", "90",
+                                "-bordercolor", "blue",
+                                "-border", "3",
+                                "-pointsize", "24",
+                                "-fill", "red",
+                                "-draw", "text 10,30 'Line bot'",
                                 jpg.path.toString(),
                                 previewImg.path.toString());
                     }
@@ -607,7 +608,6 @@ public class KitchenSinkController {
     private static DownloadedContent createTempFile(String ext) {
         String fileName = LocalDateTime.now().toString() + '-' + UUID.randomUUID() + '.' + ext;
         Path tempFile = KitchenSinkApplication.downloadedContentDir.resolve(fileName);
-        tempFile.setStyle("-fx-transform: rotate(90deg); -fx-border-radius:5px; -fx-border: 1px solid #ddd;");
         tempFile.toFile().deleteOnExit();
         return new DownloadedContent(
                 tempFile,
